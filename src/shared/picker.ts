@@ -63,7 +63,8 @@ const STYLE = `
 .dialog {
 	margin: auto;
 	width: min(420px, 100%);
-	max-height: min(560px, calc(100vh - 36px));
+	/* Фиксированная высота: список результатов не должен двигать диалог. */
+	height: min(560px, calc(100vh - 36px));
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;
