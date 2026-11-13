@@ -1,0 +1,203 @@
+{
+	"name": {
+		"message": "Price Lens"
+	},
+	"description": {
+		"message": "See any price on a page in your own currency."
+	},
+	"settings_title": {
+		"message": "Settings"
+	},
+	"settings_lang": {
+		"message": "Interface language"
+	},
+	"settings_theme": {
+		"message": "Extension theme"
+	},
+	"settings_themeHint": {
+		"message": "Independent of your system theme."
+	},
+	"settings_overlayTheme": {
+		"message": "Overlay theme"
+	},
+	"settings_overlayThemeHint": {
+		"message": "Auto follows the page's theme."
+	},
+	"settings_targetCurrency": {
+		"message": "Convert amounts to"
+	},
+	"settings_gap": {
+		"message": "Distance from selection"
+	},
+	"settings_howItWorks": {
+		"message": "How it works"
+	},
+	"values_light": {
+		"message": "Light"
+	},
+	"values_dark": {
+		"message": "Dark"
+	},
+	"values_auto": {
+		"message": "Auto"
+	},
+	"values_ru": {
+		"message": "Русский"
+	},
+	"values_en": {
+		"message": "English"
+	},
+	"notice_onboardedReset": {
+		"message": "Onboarding flag was corrupted — reset to not passed."
+	},
+	"notice_langReset": {
+		"message": "Language \"{value}\" is unknown — reset to English."
+	},
+	"notice_themeReset": {
+		"message": "Theme \"{value}\" is unknown — reset to dark."
+	},
+	"notice_overlayThemeReset": {
+		"message": "Overlay theme \"{value}\" is unknown — reset to auto."
+	},
+	"notice_currencyReset": {
+		"message": "Currency {code} is no longer in the list — target reset to USD."
+	},
+	"notice_gapReset": {
+		"message": "Distance {value} is outside 0–20 — reset to 7."
+	},
+	"popup_title": {
+		"message": "Converter"
+	},
+	"popup_from": {
+		"message": "From"
+	},
+	"popup_to": {
+		"message": "To"
+	},
+	"popup_settings": {
+		"message": "Settings"
+	},
+	"popup_onboardingPending": {
+		"message": "Setup isn't finished yet — amounts on pages will appear after it."
+	},
+	"popup_onboardingAction": {
+		"message": "Finish setup"
+	},
+	"popup_loading": {
+		"message": "Getting the rate…"
+	},
+	"input_empty": {
+		"message": "Type an amount"
+	},
+	"input_range": {
+		"message": "This is a range, not an amount."
+	},
+	"input_unreadable": {
+		"message": "Couldn't read the number."
+	},
+	"error_network_title": {
+		"message": "No connection"
+	},
+	"error_network_detail": {
+		"message": "The {from} → {to} rate wasn't received: the browser couldn't reach the rate server."
+	},
+	"error_timeout_title": {
+		"message": "The server didn't answer"
+	},
+	"error_timeout_detail": {
+		"message": "8 seconds with no answer; the {from} → {to} rate wasn't received."
+	},
+	"error_tooMany_title": {
+		"message": "Too many requests"
+	},
+	"error_tooMany_detail": {
+		"message": "The server limited the request rate ({status}) for {from} → {to}."
+	},
+	"error_rateLimit_detail": {
+		"message": "We asked for {from} → {to} too often; the extension holds back to spare the server."
+	},
+	"error_server_title": {
+		"message": "The rate service is down"
+	},
+	"error_server_detail": {
+		"message": "The server answered {status} — the problem is on its side, not in your settings."
+	},
+	"error_noRate_title": {
+		"message": "No rate for this pair"
+	},
+	"error_noRate_detail": {
+		"message": "The server answered {status} for {from} → {to}; retrying won't help."
+	},
+	"error_unparseable_title": {
+		"message": "Couldn't read the answer"
+	},
+	"error_unparseable_detail": {
+		"message": "The answer for {from} → {to} has no rate field ({status}). This is our bug."
+	},
+	"action_retry": {
+		"message": "Retry"
+	},
+	"action_retryIn": {
+		"message": "Retry · {seconds} s"
+	},
+	"action_otherCurrency": {
+		"message": "Other currency"
+	},
+	"picker_search": {
+		"message": "Search by code or name"
+	},
+	"picker_empty": {
+		"message": "Nothing matches “{query}”."
+	},
+	"picker_close": {
+		"message": "Close"
+	},
+	"picker_count_one": {
+		"message": "{n} currency"
+	},
+	"picker_count_few": {
+		"message": "{n} currencies"
+	},
+	"picker_count_many": {
+		"message": "{n} currencies"
+	},
+	"picker_count_other": {
+		"message": "{n} currencies"
+	},
+	"overlay_label": {
+		"message": "Converted amount"
+	},
+	"overlay_loading": {
+		"message": "Getting the rate"
+	},
+	"onboarding_step": {
+		"message": "Step {n} of 2"
+	},
+	"onboarding_step1Title": {
+		"message": "Make it yours"
+	},
+	"onboarding_step1Lead": {
+		"message": "Language, look and the currency your amounts on pages are shown in. All three can be changed later in settings."
+	},
+	"onboarding_next": {
+		"message": "Next"
+	},
+	"onboarding_back": {
+		"message": "Back"
+	},
+	"onboarding_done": {
+		"message": "Done"
+	},
+	"onboarding_step2Title": {
+		"message": "Select the amount — not the sentence"
+	},
+	"onboarding_step2Lead": {
+		"message": "Select just the price — see the amount in your currency."
+	},
+	"onboarding_gapHint": {
+		"message": "Drag the slider to change the spacing."
+	},
+	"onboarding_title": {
+		"message": "Welcome"
+	}
+}

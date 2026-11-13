@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Currency Converter Widget</title>
+		<link rel="stylesheet" href="./popup.css" />
+		<style>
+			@font-face {
+				font-family: Roboto;
+				font-style: normal;
+				font-display: swap;
+				font-weight: 100 900;
+				src: url('/fonts/roboto-latin.woff2') format('woff2');
+				unicode-range:
+					U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+					U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+			}
+			@font-face {
+				font-family: Roboto;
+				font-style: normal;
+				font-display: swap;
+				font-weight: 100 900;
+				src: url('/fonts/roboto-cyrillic.woff2') format('woff2');
+				unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+			}
+		</style>
+		<link rel="preload" href="./fonts/roboto-latin.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="./fonts/roboto-cyrillic.woff2" as="font" type="font/woff2" crossorigin />
+	</head>
+	<body>
+		<!-- Одно окно у тулбара (Popup по CONTEXT.md): конвертер, настройки и
+		     онбординг — три вида внутри одной поверхности, без отдельных страниц. -->
+		<main id="app">
+			<header class="bar">
+				<button type="button" id="back" class="icon-btn" hidden>
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M15 5l-7 7 7 7" />
+					</svg>
+				</button>
+				<h1 id="title"></h1>
+				<button type="button" id="gear" class="icon-btn">
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<circle cx="12" cy="12" r="3.2" />
+						<path
+							d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 8.96 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1z"
+						/>
+					</svg>
+				</button>
+			</header>
+
+			<section id="view-converter" class="view" hidden>
+				<div class="card">
+					<div class="work">
+						<div class="work-head">
+							<span class="eyebrow" data-i18n="popup.from"></span>
+							<span id="converter-from"></span>
+						</div>
+						<div class="value-line">
+							<span id="from-sign" class="sign" aria-hidden="true"></span>
+							<input
+								id="amount"
+								type="text"
+								inputmode="decimal"
+								autocomplete="off"
+								spellcheck="false"
+								placeholder="0"
+							/>
+						</div>
+						<p id="note" class="note" role="status" aria-live="polite"></p>
+					</div>
+
+					<div class="hair"></div>
+
+					<div class="work">
+						<div class="work-head">
+							<span class="eyebrow" data-i18n="popup.to"></span>
+							<span id="converter-to"></span>
+						</div>
+						<div class="value-line">
+							<span id="to-sign" class="sign" aria-hidden="true"></span>
+							<div id="result" class="result" role="status" aria-live="polite"></div>
+						</div>
+						<div id="error" class="error" role="alert" hidden>
+							<p id="error-title" class="error-title"></p>
+							<p id="error-detail" class="error-detail"></p>
+							<button type="button" id="error-action"></button>
+						</div>
+					</div>
+				</div>
+
+				<p id="onboarding-notice" class="notice" hidden>
+					<span data-i18n="popup.onboardingPending"></span>
+					<button
+						type="button"
+						id="finish-setup"
+						class="text-btn"
+						data-i18n="popup.onboardingAction"
+					></button>
+				</p>
+			</section>
+
+			<section id="view-settings" class="view" hidden>
+				<div class="group">
+					<div class="row">
+						<span class="row-label" id="settings-lang-label" data-i18n="settings.lang"></span>
+						<div class="seg" data-seg="lang" role="group" aria-labelledby="settings-lang-label">
+							<button type="button" data-value="ru" data-i18n="values.ru"></button>
+							<button type="button" data-value="en" data-i18n="values.en"></button>
+						</div>
+					</div>
+					<div class="row">
+						<span class="row-label" id="settings-theme-label" data-i18n="settings.theme"></span>
+						<div class="seg" data-seg="theme" role="group" aria-labelledby="settings-theme-label">
+							<button type="button" data-value="light" data-i18n="values.light"></button>
+							<button type="button" data-value="dark" data-i18n="values.dark"></button>
+						</div>
+					</div>
+					<p class="hint" data-i18n="settings.themeHint"></p>
+					<div class="row">
+						<span class="row-label" id="settings-overlay-label" data-i18n="settings.overlayTheme"></span>
+						<div class="seg" data-seg="overlayTheme" role="group" aria-labelledby="settings-overlay-label">
+							<button type="button" data-value="light" data-i18n="values.light"></button>
+							<button type="button" data-value="dark" data-i18n="values.dark"></button>
+							<button type="button" data-value="auto" data-i18n="values.auto"></button>
+						</div>
+					</div>
+					<p class="hint" data-i18n="settings.overlayThemeHint"></p>
+					<div class="row">
+						<span class="row-label" id="settings-target-label" data-i18n="settings.targetCurrency"></span>
+						<span id="settings-target" class="picker-slot"></span>
+					</div>
+					<div class="row row-top">
+						<span class="row-label" data-i18n="settings.gap"></span>
+						<output id="settings-gap-value" class="row-value"></output>
+					</div>
+					<input class="slider" data-gap type="range" min="0" max="20" step="1" aria-label="" />
+				</div>
+				<button type="button" id="how" class="nav-row">
+					<span data-i18n="settings.howItWorks"></span>
+					<span class="chev" aria-hidden="true">›</span>
+				</button>
+			</section>
+
+			<section id="view-onboarding" class="view" hidden>
+				<p id="onboarding-step-label" class="step"></p>
+
+				<div id="onboarding-step-1">
+					<h2 data-i18n="onboarding.step1Title"></h2>
+					<p class="lead" data-i18n="onboarding.step1Lead"></p>
+					<div class="group">
+						<div class="row">
+							<span class="row-label" id="onboarding-lang-label" data-i18n="settings.lang"></span>
+							<div class="seg" data-seg="lang" role="group" aria-labelledby="onboarding-lang-label">
+								<button type="button" data-value="ru" data-i18n="values.ru"></button>
+								<button type="button" data-value="en" data-i18n="values.en"></button>
+							</div>
+						</div>
+						<div class="row">
+							<span class="row-label" id="onboarding-theme-label" data-i18n="settings.theme"></span>
+							<div class="seg" data-seg="theme" role="group" aria-labelledby="onboarding-theme-label">
+								<button type="button" data-value="light" data-i18n="values.light"></button>
+								<button type="button" data-value="dark" data-i18n="values.dark"></button>
+							</div>
+						</div>
+						<div class="row">
+							<span
+								class="row-label"
+								id="onboarding-target-label"
+								data-i18n="settings.targetCurrency"
+							></span>
+							<span id="onboarding-target" class="picker-slot"></span>
+						</div>
+					</div>
+					<div class="actions">
+						<button
+							type="button"
+							id="onboarding-back-1"
+							class="secondary"
+							data-i18n="onboarding.back"
+							hidden
+						></button>
+						<button type="button" id="onboarding-next" class="primary" data-i18n="onboarding.next"></button>
+					</div>
+				</div>
+
+				<div id="onboarding-step-2" hidden>
+					<h2 data-i18n="onboarding.step2Title"></h2>
+					<p class="lead" data-i18n="onboarding.step2Lead"></p>
+					<div class="scene">
+						<p class="sentence">The book costs <mark id="scene-amount">14,50 €</mark> today.</p>
+					</div>
+					<div class="row row-top">
+						<span class="row-label" data-i18n="settings.gap"></span>
+						<output id="onboarding-gap-value" class="row-value"></output>
+					</div>
+					<input class="slider" data-gap type="range" min="0" max="20" step="1" aria-label="" />
+					<p class="hint" data-i18n="onboarding.gapHint"></p>
+					<div class="actions">
+						<button
+							type="button"
+							id="onboarding-back-2"
+							class="secondary"
+							data-i18n="onboarding.back"
+						></button>
+						<button type="button" id="onboarding-done" class="primary" data-i18n="onboarding.done"></button>
+					</div>
+				</div>
+			</section>
+		</main>
+		<script type="module" src="./popup.ts"></script>
+	</body>
+</html>

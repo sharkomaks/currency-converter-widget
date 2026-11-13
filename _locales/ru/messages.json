@@ -1,0 +1,203 @@
+{
+	"name": {
+		"message": "Price Lens"
+	},
+	"description": {
+		"message": "Смотрите любую цену на странице в своей валюте."
+	},
+	"settings_title": {
+		"message": "Настройки"
+	},
+	"settings_lang": {
+		"message": "Язык интерфейса"
+	},
+	"settings_theme": {
+		"message": "Тема расширения"
+	},
+	"settings_themeHint": {
+		"message": "Не следует за системной темой."
+	},
+	"settings_overlayTheme": {
+		"message": "Тема окна"
+	},
+	"settings_overlayThemeHint": {
+		"message": "Авто повторяет тему страницы."
+	},
+	"settings_targetCurrency": {
+		"message": "Переводить суммы в"
+	},
+	"settings_gap": {
+		"message": "Отступ от выделения"
+	},
+	"settings_howItWorks": {
+		"message": "Как это работает"
+	},
+	"values_light": {
+		"message": "Светлая"
+	},
+	"values_dark": {
+		"message": "Тёмная"
+	},
+	"values_auto": {
+		"message": "Авто"
+	},
+	"values_ru": {
+		"message": "Русский"
+	},
+	"values_en": {
+		"message": "English"
+	},
+	"notice_onboardedReset": {
+		"message": "Признак «онбординг пройден» повреждён — сброшен на «не пройден»."
+	},
+	"notice_langReset": {
+		"message": "Язык «{value}» неизвестен — сброшен на английский."
+	},
+	"notice_themeReset": {
+		"message": "Тема «{value}» неизвестна — сброшена на тёмную."
+	},
+	"notice_overlayThemeReset": {
+		"message": "Тема окна «{value}» неизвестна — сброшена на авто."
+	},
+	"notice_currencyReset": {
+		"message": "Валюты {code} больше нет в списке — цель переведена на USD."
+	},
+	"notice_gapReset": {
+		"message": "Отступ {value} вне диапазона 0–20 — сброшен на 7."
+	},
+	"popup_title": {
+		"message": "Конвертер"
+	},
+	"popup_from": {
+		"message": "Из"
+	},
+	"popup_to": {
+		"message": "В"
+	},
+	"popup_settings": {
+		"message": "Настройки"
+	},
+	"popup_onboardingPending": {
+		"message": "Настройка не закончена — суммы на страницах появятся после неё."
+	},
+	"popup_onboardingAction": {
+		"message": "Закончить настройку"
+	},
+	"popup_loading": {
+		"message": "Получаю курс…"
+	},
+	"input_empty": {
+		"message": "Введите сумму"
+	},
+	"input_range": {
+		"message": "Это диапазон, а не сумма."
+	},
+	"input_unreadable": {
+		"message": "Не удалось прочитать число."
+	},
+	"error_network_title": {
+		"message": "Нет подключения"
+	},
+	"error_network_detail": {
+		"message": "Курс {from} → {to} не получен: браузер не связался с сервером курсов."
+	},
+	"error_timeout_title": {
+		"message": "Сервер не ответил"
+	},
+	"error_timeout_detail": {
+		"message": "8 секунд без ответа; курс {from} → {to} не получен."
+	},
+	"error_tooMany_title": {
+		"message": "Слишком много запросов"
+	},
+	"error_tooMany_detail": {
+		"message": "Сервер ограничил частоту ({status}) для {from} → {to}."
+	},
+	"error_rateLimit_detail": {
+		"message": "Курс {from} → {to} спрашивали слишком часто; расширение сдерживается, чтобы не нагружать сервер."
+	},
+	"error_server_title": {
+		"message": "Сервис курсов недоступен"
+	},
+	"error_server_detail": {
+		"message": "Сервер ответил {status} — это на его стороне, не в настройках."
+	},
+	"error_noRate_title": {
+		"message": "Курса для этой пары нет"
+	},
+	"error_noRate_detail": {
+		"message": "Сервер ответил {status} на {from} → {to}; повтор не поможет."
+	},
+	"error_unparseable_title": {
+		"message": "Ответ не разобран"
+	},
+	"error_unparseable_detail": {
+		"message": "В ответе на {from} → {to} нет поля rate ({status}). Это наша ошибка."
+	},
+	"action_retry": {
+		"message": "Повторить"
+	},
+	"action_retryIn": {
+		"message": "Повторить · {seconds} с"
+	},
+	"action_otherCurrency": {
+		"message": "Другая валюта"
+	},
+	"picker_search": {
+		"message": "Поиск по коду или названию"
+	},
+	"picker_empty": {
+		"message": "Ничего не нашлось по «{query}»."
+	},
+	"picker_close": {
+		"message": "Закрыть"
+	},
+	"picker_count_one": {
+		"message": "{n} валюта"
+	},
+	"picker_count_few": {
+		"message": "{n} валюты"
+	},
+	"picker_count_many": {
+		"message": "{n} валют"
+	},
+	"picker_count_other": {
+		"message": "{n} валюты"
+	},
+	"overlay_label": {
+		"message": "Сумма в вашей валюте"
+	},
+	"overlay_loading": {
+		"message": "Получаю курс"
+	},
+	"onboarding_step": {
+		"message": "Шаг {n} из 2"
+	},
+	"onboarding_step1Title": {
+		"message": "Настройте под себя"
+	},
+	"onboarding_step1Lead": {
+		"message": "Язык, вид и валюта, в которой вы видите суммы на страницах. Всё это потом меняется в настройках."
+	},
+	"onboarding_next": {
+		"message": "Дальше"
+	},
+	"onboarding_back": {
+		"message": "Назад"
+	},
+	"onboarding_done": {
+		"message": "Готово"
+	},
+	"onboarding_step2Title": {
+		"message": "Выделяйте сумму, а не фразу"
+	},
+	"onboarding_step2Lead": {
+		"message": "Выделите только цену — увидите сумму в своей валюте."
+	},
+	"onboarding_gapHint": {
+		"message": "Двигайте ползунок, чтобы изменить отступ."
+	},
+	"onboarding_title": {
+		"message": "Добро пожаловать"
+	}
+}

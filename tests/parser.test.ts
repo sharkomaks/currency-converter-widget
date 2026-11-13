@@ -1,0 +1,119 @@
+import { describe, expect, test } from 'bun:test';
+/**
+ * Шов 1 — парсер (спека, Testing Decisions; план §12 целиком, критерии 17 и 20).
+ * Ожидаемые значения взяты из таблиц плана, не из кода. Два входа: текст
+ * выделения и язык страницы (для ¥/￥ — ADR 0012).
+ */
+
+import { parseSelection } from '../src/content/parser';
+
+const NBSP = ' ';
+const NNBSP = ' '; // U+202F узкий неразрывный
+const THINSP = ' '; // U+2009 тонкий
+
+describe('§12.1 индикаторы и базовая сумма', () => {
+	test.each([
+		['$12.50', { currency: 'USD', amount: '12.50', multiplier: 1 }],
+		['14,50 €', { currency: 'EUR', amount: '14.50', multiplier: 1 }],
+		['£5', { currency: 'GBP', amount: '5', multiplier: 1 }],
+		['₽100', { currency: 'RUB', amount: '100', multiplier: 1 }],
+		['12.50 USD', { currency: 'USD', amount: '12.50', multiplier: 1 }],
+		['usd 12.50', { currency: 'USD', amount: '12.50', multiplier: 1 }]
+	])('%s → %j', (input, expected) => {
+		expect(parseSelection(input)).toEqual(expected);
+	});
+});
+
+describe('§12.2 арбитраж разделителя — счёт цифр, не валюта (Р2, ADR 0018)', () => {
+	test.each([
+		['€12.50', '12.50'],
+		['$12,50', '12.50'],
+		['€1.5', '1.5'],
+		['$1.234', '1234'],
+		['€1.234', '1234'],
+		['$1,234', '1234'],
+		['1.234,56 €', '1234.56'],
+		['1,234.56 €', '1234.56'],
+		['1,00,000 €', '100000'],
+		['1 234 €', '1234']
+	])('%s → %s', (input, amount) => {
+		const parsed = parseSelection(input);
+		expect(parsed?.amount).toBe(amount);
+	});
+
+	test('ведущий нуль отменяет тысячную трактовку: 0.500 $ — это половина, не пятьсот', () => {
+		expect(parseSelection('0.500 $')?.amount).toBe('0.500');
+	});
+});
+
+describe('§12.3 нормализация (С3, С4, Б2, П6)', () => {
+	test.each([
+		['$12.50.', '12.50'], // завершающая пунктуация снимается EDGE
+		['$12.50-', '12.50'], // тире в конце — знак
+		['— 12.50 ₽', '12.50'], // тире в начале — знак
+		['«12,50 €»', '12.50'], // обёртки вычёркиваются
+		[`1${NNBSP}234 €`, '1234'], // U+202F
+		[`1${THINSP}234 €`, '1234'], // U+2009
+		[`1${NBSP}234 €`, '1234'], // U+00A0
+		['$12.50\n', '12.50'], // перевод строки на конце
+		['12\n.50 €', '12.50'] // склейка блоков переводом строки
+	])('%s → %s', (input, amount) => {
+		expect(parseSelection(input)?.amount).toBe(amount);
+	});
+});
+
+describe('§12.3 отказы (Б2, Б12, раздел 2)', () => {
+	test.each([
+		['$12.50–13.00'], // диапазон
+		['$5–10'], // диапазон
+		['12.50'], // числа хватает, обозначения нет
+		['100 рублей'], // слова-валюты вне MVP (Р4)
+		['сто долларов'], // числа словами вне MVP
+		['$12.50 CAD'], // два обозначения спорят
+		['USDT 100'], // недокод — чужой тикер
+		['$12.50 и $13.00'], // две суммы
+		['12.50 13.00 $'], // два числа
+		['5 10 $'], // не группировка по три
+		['$5 $10'], // два числа при одном обозначении
+		[''], // пусто
+		['   '] // только пробелы
+	])('%s → ничего', input => {
+		expect(parseSelection(input)).toBeNull();
+	});
+
+	// Строгое §12.3: любые выжившие буквы — отказ. Абзац §12.1 про BUSD
+	// («покажет доллары») предполагал обратное и помечен в плане как
+	// пересмотренный; возвращает его к жизни одна строка в классификации.
+	test('$12.50 BUSD → отказ (строгое §12.3, помечено в плане)', () => {
+		expect(parseSelection('$12.50 BUSD')).toBeNull();
+	});
+});
+
+describe('§12.1 ¥/￥ по языку страницы (Р1, ADR 0012)', () => {
+	test.each([
+		['¥1 500', 'ja', 'JPY'],
+		['¥1 500', 'zh', 'CNY'],
+		['¥1 500', undefined, 'CNY'],
+		['￥1 500', 'zh', 'CNY'],
+		['￥1 500', 'ja', 'JPY']
+	])('%s lang=%s → %s', (input, lang, currency) => {
+		expect(parseSelection(input, lang)?.currency).toBe(currency);
+	});
+});
+
+describe('§12.4 множители (в любом порядке с суммой и индикатором)', () => {
+	test.each([
+		['5 млн ₽', { currency: 'RUB', amount: '5', multiplier: 1_000_000 }],
+		['млн 5 ₽', { currency: 'RUB', amount: '5', multiplier: 1_000_000 }],
+		['3 тыс. ₽', { currency: 'RUB', amount: '3', multiplier: 1000 }],
+		['2.5M $', { currency: 'USD', amount: '2.5', multiplier: 1_000_000 }],
+		['$100K', { currency: 'USD', amount: '100', multiplier: 1000 }],
+		['5 млн', null] // нет индикатора — отказ
+	])('%s → %j', (input, expected) => {
+		if (expected === null) {
+			expect(parseSelection(input)).toBeNull();
+		} else {
+			expect(parseSelection(input)).toEqual(expected);
+		}
+	});
+});
