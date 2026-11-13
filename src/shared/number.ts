@@ -22,13 +22,19 @@ export function readNumber(raw: string): string | null {
 	if (value.length === 0) return null;
 
 	// Пробел между цифрами — только группировка по три: «5 10» и
-	// «12.50 13.00» — не числа (две суммы / не соглашение).
+	// «12.50 13.00» — не числа (две суммы / не соглашение). Дробная часть
+	// может закрывать только последнюю группу: «87 129.32».
+	let spaceGrouped = false;
 	if (value.includes(' ')) {
+		spaceGrouped = true;
 		const groups = value.split(' ');
+		const last = groups.length - 1;
 		const ok = groups.every((group, i) => {
-			const digitsOnly = group.replace(/[.,]/g, '');
-			if (!/^\d+$/.test(digitsOnly)) return false;
-			return i === 0 ? digitsOnly.length <= 3 : digitsOnly.length === 3;
+			const match = /^(\d+)(?:[.,](\d+))?$/.exec(group);
+			if (!match) return false;
+			const integer = match[1] ?? '';
+			if (match[2] !== undefined && i !== last) return false;
+			return i === 0 ? integer.length <= 3 : integer.length === 3;
 		});
 		if (!ok) return null;
 	}
@@ -38,6 +44,17 @@ export function readNumber(raw: string): string | null {
 
 	const commaCount = (value.match(/,/g) ?? []).length;
 	const dotCount = (value.match(/\./g) ?? []).length;
+
+	// Пробел уже сгруппировал тысячи: оставшийся одиночный разделитель —
+	// десятичный, даже если после него ровно три цифры («1 234.567»).
+	if (spaceGrouped) {
+		if (commaCount > 0 && dotCount > 0) return null;
+		if (commaCount + dotCount > 1) return null;
+		if (commaCount === 1 || dotCount === 1) {
+			value = value.replace(commaCount === 1 ? ',' : '.', '.');
+		}
+		return value;
+	}
 
 	let thousands = '';
 	let decimal = '';

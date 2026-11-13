@@ -29,7 +29,8 @@ The full reasoning stays in the Russian design corpus:
 | [0015](0015-flags-as-emoji.md) | Currency symbols from Intl, not flags | accepted (replaced 2026-11-13) |
 | [0016](0016-automatic-overlay-no-trigger.md) | The overlay is automatic — no button, no gate | proposed (reason owed) |
 | [0017](0017-rate-cache-dies-with-the-session.md) | The rate cache lives in `storage.session` and dies with the browser | accepted |
-| [0018](0018-separator-arbitration-by-digit-count.md) | Separator arbitration counts digits, not the currency | accepted |
+| [0018](0018-separator-arbitration-by-digit-count.md) | Separator arbitration counts digits, not the currency | accepted (amended 2026-11-13) |
 | [0019](0019-oxlint-and-oxfmt.md) | Lint and formatting use oxc — never ESLint or Prettier | accepted |
 | [0020](0020-ui-design-under-frontend-design-skill.md) | UI is designed under the frontend-design skill; the plan wins | accepted |
 | [0021](0021-chrome-namespace-in-chromium.md) | Chromium uses `chrome`; Firefox uses `browser` | accepted (2026-11-13) |
+| [0022](0022-space-grouping-keeps-decimal-separator.md) | Space grouping settles thousands; the remaining separator is decimal | accepted (2026-11-13) |

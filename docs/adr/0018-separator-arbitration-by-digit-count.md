@@ -6,6 +6,9 @@ How the separators of an amount expression are read is decided by the shape of t
 both separators present — the rightmost is the decimal one; a separator that repeats is a thousands
 separator; a lone separator is a thousands separator only when exactly three digits follow it.
 
+Amended 2026-11-13: when spaces have already grouped thousands, the single remaining separator is decimal
+even when three digits follow it — see ADR 0022.
+
 Why: a thousands group is always exactly three digits in both conventions this product reads, so `€12.50`
 cannot be a grouping under any rule — yet the currency table (Round 6) read it as 1250, silently and ×100,
 on the commonest way an English page writes euros. On well-formed numbers the digit rule and the currency
