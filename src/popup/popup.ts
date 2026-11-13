@@ -80,7 +80,7 @@ function renderStatic(): void {
 	result.dataset.placeholder = t('popup.amountPlaceholder');
 	setIconLabel('#gear', 'popup.settings');
 	setIconLabel('#back', 'onboarding.back');
-	setIconLabel('#how', 'settings.howItWorks');
+	setIconLabel('#how', 'settings.howToUse');
 	setIconLabel('#diagnostics-open', 'settings.diagnostics');
 	for (const slider of $$<HTMLInputElement>('input[data-gap]')) {
 		slider.setAttribute('aria-label', t('settings.gap'));

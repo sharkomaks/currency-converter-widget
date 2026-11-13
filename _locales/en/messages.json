@@ -29,8 +29,8 @@
 	"settings_gap": {
 		"message": "Distance from selection"
 	},
-	"settings_howItWorks": {
-		"message": "How it works"
+	"settings_howToUse": {
+		"message": "How to use"
 	},
 	"settings_diagnostics": {
 		"message": "Diagnostics"

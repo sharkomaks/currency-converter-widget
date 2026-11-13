@@ -29,8 +29,8 @@
 	"settings_gap": {
 		"message": "Отступ от выделения"
 	},
-	"settings_howItWorks": {
-		"message": "Как это работает"
+	"settings_howToUse": {
+		"message": "Как пользоваться"
 	},
 	"settings_diagnostics": {
 		"message": "Диагностика"

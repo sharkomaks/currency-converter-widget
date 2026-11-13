@@ -46,7 +46,7 @@ day-to-day use, Chrome or Firefox Developer Edition is the practical path.
 - The fields and the pickers lead with the narrow currency symbol (`₽`, `$`, `Bs`) and the ISO code; there
   are no flags, because Windows does not render regional emoji.
 - Settings: language, extension theme, overlay theme, target currency, distance from the selection.
-  **How it works** replays the two-screen onboarding and its live scene. Settings and onboarding open
+  **How to use** replays the two-screen onboarding and its live scene. Settings and onboarding open
   **inside the same popup** — there are no separate settings or onboarding tabs.
 
 ## Development
@@ -62,7 +62,7 @@ bun run build      # lint + tests + two Vite passes + dist folders
 
 ### If the window does not appear
 
-Open the toolbar app → gear → the pulse icon (**Diagnostics**); the **?** next to it replays **How it works**.
+Open the toolbar app → gear → the pulse icon (**Diagnostics**); the **?** next to it opens **How to use**.
 The diagnostics view says whether the content script is running on the current tab and prints what it saw:
 the raw selection, the parser's answer, the anchor, the placement and the rate result. **Copy report** puts
 the whole text on the clipboard.

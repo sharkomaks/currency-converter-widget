@@ -45,6 +45,8 @@ describe('текст интерфейса только в словарях', () 
 		for (const file of sourceFiles('src')) {
 			const source = readFileSync(file, 'utf8');
 			for (const match of source.matchAll(/\bt\('([^']+)'/g)) keys.add(keyOf(match[1] as string));
+			for (const match of source.matchAll(/setIconLabel\('[^']+',\s*'([^']+)'/g))
+				keys.add(keyOf(match[1] as string));
 		}
 		expect(keys.size).toBeGreaterThan(0);
 		for (const key of keys) {
