@@ -60,6 +60,19 @@ bun run typecheck  # tsc --noEmit
 bun run build      # lint + tests + two Vite passes + dist folders
 ```
 
+### If the window does not appear
+
+Open the toolbar app → gear → the pulse icon (**Diagnostics**); the **?** next to it replays **How it works**.
+The diagnostics view says whether the content script is running on the current tab and prints what it saw:
+the raw selection, the parser's answer, the anchor, the placement and the rate result. **Copy report** puts
+the whole text on the clipboard.
+
+Status `The page did not answer` means the script never ran there: browser pages, the extension stores,
+PDF and `file://` are closed to content scripts, Chrome may have site access set to **On click** (check
+`chrome://extensions` → Details → Site access), or the page was not reloaded after the extension was
+reloaded. Status `…has not seen a selection` means the script is alive but `selectionchange` did not fire
+for the selection. The event log shows a rejected parse together with the exact text it received.
+
 The UI font is Roboto, committed as two local woff2 files in `public/fonts` — there is no request to Google
 Fonts and no runtime fetch. Rates come from [Frankfurter v2](https://frankfurter.dev), one request per pair, reused for six hours
 inside the browser session and never written to disk. The currency list is a module (`src/shared/currencies.ts`),

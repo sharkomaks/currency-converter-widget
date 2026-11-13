@@ -5,6 +5,8 @@
 
 import type { RateError } from '../background/rate';
 import { browserDefaults, targetAfterLanguageChange } from '../shared/browser-defaults';
+import { DIAGNOSTICS_MESSAGE, type DiagSnapshot } from '../shared/diagnostics';
+import { formatDiagnosticsReport } from '../shared/diagnostics-format';
 import { describeError } from '../shared/errors';
 import { currencyMark, formatAmount, formatMoney } from '../shared/format';
 import { setLang, t } from '../shared/i18n';
@@ -17,12 +19,13 @@ import { chromeSessionArea, loadPair, savePair } from '../shared/session';
 import { DEFAULTS, loadSettings, saveSettings } from '../shared/storage';
 import type { Lang, OverlayTheme, Settings, Theme } from '../shared/storage';
 import { resolveOverlayTheme } from '../shared/tone';
+import { extensionApi } from '../shared/webext';
 
-type View = 'converter' | 'settings' | 'onboarding';
+type View = 'converter' | 'settings' | 'onboarding' | 'diagnostics';
 
 function $<T extends HTMLElement>(selector: string): T {
 	const element = document.querySelector<T>(selector);
-	if (!element) throw new Error(`нет элемента ${selector}`);
+	if (!element) throw new Error(t('popup.missingElement', { selector }));
 	return element;
 }
 
@@ -37,6 +40,9 @@ const errorBlock = $('#error');
 const errorTitle = $('#error-title');
 const errorDetail = $('#error-detail');
 const errorAction = $<HTMLButtonElement>('#error-action');
+const diagnosticsStatus = $('#diagnostics-status');
+const diagnosticsBody = $('#diagnostics-body');
+const diagnosticsCopy = $<HTMLButtonElement>('#diagnostics-copy');
 const fromSign = $('#from-sign');
 const toSign = $('#to-sign');
 const overlay = new Overlay();
@@ -58,19 +64,38 @@ let targetPicker: PickerHandle | undefined;
 let fromPicker: PickerHandle | undefined;
 let toPicker: PickerHandle | undefined;
 
+function setIconLabel(selector: string, key: string): void {
+	const button = $<HTMLButtonElement>(selector);
+	const label = t(key);
+	button.setAttribute('aria-label', label);
+	button.title = label;
+}
+
 function renderStatic(): void {
 	for (const element of $$<HTMLElement>('[data-i18n]')) {
 		element.textContent = t(element.dataset.i18n as string);
 	}
-	$('#gear').setAttribute('aria-label', t('popup.settings'));
-	$('#back').setAttribute('aria-label', t('onboarding.back'));
+	document.title = t('name');
+	input.placeholder = t('popup.amountPlaceholder');
+	result.dataset.placeholder = t('popup.amountPlaceholder');
+	setIconLabel('#gear', 'popup.settings');
+	setIconLabel('#back', 'onboarding.back');
+	setIconLabel('#how', 'settings.howItWorks');
+	setIconLabel('#diagnostics-open', 'settings.diagnostics');
 	for (const slider of $$<HTMLInputElement>('input[data-gap]')) {
 		slider.setAttribute('aria-label', t('settings.gap'));
 	}
 }
 
 function setTitle(): void {
-	const key = view === 'converter' ? 'popup.title' : view === 'settings' ? 'settings.title' : 'onboarding.title';
+	const key =
+		view === 'converter'
+			? 'popup.title'
+			: view === 'settings'
+				? 'settings.title'
+				: view === 'diagnostics'
+					? 'diagnostics.title'
+					: 'onboarding.title';
 	$('#title').textContent = t(key);
 }
 
@@ -147,9 +172,12 @@ function placeTargetPicker(next: View): void {
 	else if (next === 'onboarding') $('#onboarding-target').append(targetPicker.button);
 }
 
+let diagnosticsReturn: View = 'settings';
+
 function canGoBack(): boolean {
 	if (view === 'converter') return false;
 	if (view === 'settings') return true;
+	if (view === 'diagnostics') return true;
 	return onboardingStep === 2 || returnView !== 'converter' || settings.onboarded;
 }
 
@@ -159,12 +187,91 @@ function showView(next: View): void {
 		section.hidden = section.id !== `view-${next}`;
 	}
 	$('#gear').hidden = next !== 'converter';
+	$('#how').hidden = next !== 'settings';
+	$('#diagnostics-open').hidden = next !== 'settings';
 	$('#back').hidden = !canGoBack();
 	if (next !== 'onboarding') overlay.hide();
 	placeTargetPicker(next);
 	setTitle();
 	if (next === 'converter') recompute();
 	if (next === 'onboarding') setOnboardingStep(onboardingStep);
+	if (next === 'diagnostics') void renderDiagnostics();
+}
+
+type DiagnosticsReport =
+	| { kind: 'running'; snapshot: DiagSnapshot; stale: boolean; selectionSeen: boolean }
+	| { kind: 'missing'; detail: string };
+
+let diagnosticsToken = 0;
+let diagnosticsText = '';
+
+async function diagnosticsReport(): Promise<DiagnosticsReport> {
+	try {
+		const tabs = await extensionApi().tabs.query({ active: true, currentWindow: true });
+		const tabId = tabs[0]?.id;
+		if (tabId === undefined) return { kind: 'missing', detail: t('diagnostics.noTab') };
+		const answer: unknown = await extensionApi().tabs.sendMessage(tabId, { type: DIAGNOSTICS_MESSAGE });
+		const snapshot = (answer as { snapshot?: DiagSnapshot } | null)?.snapshot;
+		if (!snapshot || typeof snapshot !== 'object') return { kind: 'missing', detail: t('diagnostics.noSnapshot') };
+		return {
+			kind: 'running',
+			snapshot,
+			stale: snapshot.version !== extensionApi().runtime.getManifest().version,
+			selectionSeen: snapshot.events.some(event => event.event === 'selection' && event.data?.result !== 'none')
+		};
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		// «Receiving end does not exist» — это ровно случай «скрипт не запущен»,
+		// который уже назван статусом; английскую строку браузера не дублируем.
+		const detail = /Receiving end does not exist|Could not establish connection/i.test(message)
+			? ''
+			: t('diagnostics.browserError', { message });
+		return { kind: 'missing', detail };
+	}
+}
+
+async function renderDiagnostics(): Promise<void> {
+	const token = ++diagnosticsToken;
+	diagnosticsStatus.dataset.kind = '';
+	diagnosticsStatus.textContent = t('diagnostics.checking');
+	diagnosticsBody.textContent = '';
+	const report = await diagnosticsReport();
+	if (token !== diagnosticsToken || view !== 'diagnostics') return;
+
+	if (report.kind === 'missing') {
+		diagnosticsStatus.dataset.kind = 'bad';
+		diagnosticsStatus.textContent = t('diagnostics.notRunning');
+		diagnosticsText = `${t('diagnostics.notRunning')}\n${t('diagnostics.reasons')}${report.detail ? `\n\n${report.detail}` : ''}`;
+		diagnosticsBody.textContent = diagnosticsText;
+		return;
+	}
+
+	if (report.stale) {
+		diagnosticsStatus.dataset.kind = 'warn';
+		diagnosticsStatus.textContent = t('diagnostics.stale');
+	} else if (!report.selectionSeen) {
+		diagnosticsStatus.dataset.kind = 'warn';
+		diagnosticsStatus.textContent = t('diagnostics.noSelection');
+	} else {
+		diagnosticsStatus.textContent = t('diagnostics.running');
+	}
+	diagnosticsText = formatDiagnosticsReport(report.snapshot, settings.lang);
+	diagnosticsBody.textContent = diagnosticsText;
+	diagnosticsBody.scrollTop = diagnosticsBody.scrollHeight;
+}
+
+async function copyDiagnostics(): Promise<void> {
+	if (!diagnosticsText) return;
+	const label = diagnosticsCopy.textContent ?? t('diagnostics.copy');
+	try {
+		await navigator.clipboard.writeText(diagnosticsText);
+		diagnosticsCopy.textContent = t('diagnostics.copied');
+	} catch {
+		diagnosticsCopy.textContent = t('diagnostics.copyFailed');
+	}
+	window.setTimeout(() => {
+		diagnosticsCopy.textContent = label;
+	}, 1500);
 }
 
 function setOnboardingStep(next: 1 | 2): void {
@@ -376,12 +483,19 @@ function bindControls(): void {
 	$('#gear').addEventListener('click', () => showView('settings'));
 	$('#back').addEventListener('click', () => {
 		if (view === 'settings') showView('converter');
+		else if (view === 'diagnostics') showView(diagnosticsReturn);
 		else if (view === 'onboarding') {
 			if (onboardingStep === 2) setOnboardingStep(1);
 			else showView(returnView);
 		}
 	});
-	$('#how').addEventListener('click', () => showOnboarding('settings'));
+	$('#how').addEventListener('click', () => showOnboarding(view));
+	$('#diagnostics-open').addEventListener('click', () => {
+		diagnosticsReturn = view;
+		showView('diagnostics');
+	});
+	$('#diagnostics-refresh').addEventListener('click', () => void renderDiagnostics());
+	diagnosticsCopy.addEventListener('click', () => void copyDiagnostics());
 	$('#finish-setup').addEventListener('click', () => showOnboarding('converter'));
 	$('#onboarding-next').addEventListener('click', () => setOnboardingStep(2));
 	$('#onboarding-back-1').addEventListener('click', () => showView(returnView));

@@ -200,7 +200,7 @@ export function createPicker(options: PickerOptions): PickerHandle {
 	search.setAttribute('aria-autocomplete', 'list');
 	const closeButton = el('button', 'close');
 	closeButton.type = 'button';
-	closeButton.textContent = '×';
+	closeButton.textContent = t('picker.closeGlyph');
 	closeButton.setAttribute('aria-label', t('picker.close'));
 	head.append(search, closeButton);
 

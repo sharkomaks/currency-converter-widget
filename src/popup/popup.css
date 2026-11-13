@@ -199,7 +199,7 @@ input#amount::placeholder {
 	text-overflow: ellipsis;
 }
 .result[data-empty='true']::before {
-	content: '0';
+	content: attr(data-placeholder);
 	color: var(--muted);
 	font-weight: 500;
 	opacity: 0.45;
@@ -319,6 +319,31 @@ input#amount::placeholder {
 	line-height: 1.4;
 	color: var(--muted);
 }
+.hint[data-kind='bad'] {
+	color: var(--danger);
+}
+.hint[data-kind='warn'] {
+	color: var(--ink);
+}
+
+.diag-body {
+	max-height: 340px;
+	margin: 0;
+	padding: 10px 12px;
+	overflow: auto;
+	font:
+		11px/1.5 ui-monospace,
+		'Cascadia Code',
+		Consolas,
+		monospace;
+	color: var(--ink);
+	background: var(--surface);
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+	user-select: text;
+}
 
 .seg {
 	flex: none;
@@ -353,31 +378,6 @@ input#amount::placeholder {
 	width: 100%;
 	margin: 0 0 8px;
 	accent-color: var(--accent);
-}
-
-.nav-row {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	width: 100%;
-	margin-top: 10px;
-	padding: 12px 16px;
-	font: inherit;
-	font-size: 13.5px;
-	color: var(--ink);
-	background: var(--surface);
-	border: 0;
-	border-radius: 14px;
-	box-shadow: var(--shadow);
-	cursor: pointer;
-}
-.nav-row:hover {
-	background: var(--surface-2);
-}
-.chev {
-	font-size: 18px;
-	line-height: 1;
-	color: var(--muted);
 }
 
 .picker-slot {

@@ -4,6 +4,7 @@
 // номер запроса против гонок. Курса в нём нет — курс принадлежит фону.
 
 import type { RateError } from '../background/rate';
+import { record, setState, startDiagnostics } from '../shared/diagnostics';
 import { describeError } from '../shared/errors';
 import { formatMoney } from '../shared/format';
 import { setLang, t } from '../shared/i18n';
@@ -15,7 +16,16 @@ import { resolveOverlayTheme, resolvePageTheme } from '../shared/tone';
 import { extensionApi } from '../shared/webext';
 import { parseSelection } from './parser';
 
-const overlay = new Overlay();
+// Журнал ставится раньше окна: если конструктор упадёт, панель диагностики
+// всё равно ответит и покажет ошибку.
+startDiagnostics();
+let overlay: Overlay;
+try {
+	overlay = new Overlay();
+} catch (error) {
+	record('error', 'overlay.construct', { reason: error instanceof Error ? error.message : String(error) });
+	throw error;
+}
 let settings: Settings | null = null;
 let settingsPromise: Promise<Settings> | null = null;
 let dirty = true;
@@ -38,7 +48,15 @@ function snapshot(): Promise<Settings> {
 				settings = loaded;
 				dirty = false;
 				setLang(loaded.lang);
+				setState('settings.lang', loaded.lang);
+				setState('settings.target', loaded.targetCurrency);
+				setState('settings.theme', loaded.theme);
+				setState('settings.overlayTheme', loaded.overlayTheme);
 				return loaded;
+			})
+			.catch((error: unknown) => {
+				record('error', 'settings.load', { reason: error instanceof Error ? error.message : String(error) });
+				throw error;
 			})
 			.finally(() => {
 				settingsPromise = null;
@@ -47,12 +65,15 @@ function snapshot(): Promise<Settings> {
 	return settingsPromise;
 }
 
-function close(): void {
+function close(reason?: string): void {
+	if (current && reason) record('info', 'overlay.close', { reason });
 	requestId += 1;
 	inspectToken += 1;
 	current = null;
 	clearCountdown();
 	overlay.hide();
+	setState('overlay.visible', false);
+	setState('overlay.phase', 'closed');
 }
 
 function themeFor(s: Settings) {
@@ -61,14 +82,28 @@ function themeFor(s: Settings) {
 
 function place(): boolean {
 	if (!current || !settings) return false;
-	return overlay.place(current.anchor, settings.gap);
+	const placed = overlay.place(current.anchor, settings.gap);
+	setState('overlay.visible', placed);
+	if (!placed) {
+		record(
+			'warn',
+			'overlay.no-space',
+			{
+				anchor: current.anchor.toJSON(),
+				viewport: { width: window.innerWidth, height: window.innerHeight },
+				gap: settings.gap
+			},
+			500
+		);
+	}
+	return placed;
 }
 
 function openSettings(): void {
 	void extensionApi()
 		.runtime.sendMessage({ type: 'openSettings' })
 		.catch(() => undefined);
-	close();
+	close('open-settings');
 }
 
 function retry(c: NonNullable<typeof current>): void {
@@ -99,6 +134,7 @@ function showError(error: RateError): void {
 	const c = current;
 	if (!c) return;
 	clearCountdown();
+	setState('overlay.phase', 'error');
 	const view = describeError(error, c.from, c.to);
 	const cta = view.action;
 	if (cta === 'retry') {
@@ -127,8 +163,22 @@ function showError(error: RateError): void {
 }
 
 async function ask(c: NonNullable<typeof current>, id: number, fresh: boolean): Promise<void> {
+	record('info', 'rate.request', { from: c.from, to: c.to, fresh });
 	const result = await requestRate(c.from, c.to, { fresh });
-	if (id !== requestId || current !== c) return;
+	if ('error' in result) {
+		record('warn', 'rate.result', {
+			from: c.from,
+			to: c.to,
+			error: result.error.kind,
+			status: result.error.status ?? null
+		});
+	} else {
+		record('info', 'rate.result', { from: c.from, to: c.to });
+	}
+	if (id !== requestId || current !== c) {
+		record('info', 'rate.ignored', { from: c.from, to: c.to });
+		return;
+	}
 	const s = settings;
 	if (!s) return;
 
@@ -138,6 +188,7 @@ async function ask(c: NonNullable<typeof current>, id: number, fresh: boolean): 
 	}
 	gate.succeed();
 	const text = formatMoney(convert(c.amount, result.rate, c.to, c.multiplier), c.to, s.lang);
+	setState('overlay.phase', 'result');
 	overlay.update({ phase: 'result', text });
 	place();
 }
@@ -155,6 +206,9 @@ function showEcho(parsed: { currency: string; amount: string; multiplier: number
 	gate = new RetryGate();
 	clearCountdown();
 	requestId += 1;
+	setState('overlay.phase', 'result');
+	setState('overlay.pair', `${parsed.currency}→${parsed.currency}`);
+	setState('overlay.amount', parsed.amount);
 	overlay.setTheme(themeFor(s));
 	overlay.update({
 		phase: 'result',
@@ -176,21 +230,38 @@ function open(parsed: { currency: string; amount: string; multiplier: number }, 
 	gate = new RetryGate();
 	clearCountdown();
 	requestId += 1;
+	setState('overlay.phase', 'loading');
+	setState('overlay.pair', `${parsed.currency}→${s.targetCurrency}`);
+	setState('overlay.amount', parsed.amount);
 	overlay.setTheme(themeFor(s));
 	overlay.update({ phase: 'loading' });
 	place();
 	void ask(current, requestId, false);
 }
 
+function logSelection(result: string, text: string, data: Record<string, unknown> = {}): void {
+	setState('selection.result', result);
+	setState('selection.text', text);
+	record('info', 'selection', { result, text, ...data }, 400);
+}
+
 function inspect(): void {
 	const selection = window.getSelection();
 	if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
-		close();
+		logSelection('none', '', { collapsed: selection?.isCollapsed ?? null, ranges: selection?.rangeCount ?? null });
+		close('selection-empty');
 		return;
 	}
-	const parsed = parseSelection(selection.toString(), document.documentElement.lang || document.body?.lang || '');
+	const text = selection.toString();
+	const lang = document.documentElement.lang || document.body?.lang || '';
+	const parsed = parseSelection(text, lang);
+	logSelection(
+		parsed ? 'parsed' : 'rejected',
+		text,
+		parsed ? { lang, currency: parsed.currency, amount: parsed.amount, multiplier: parsed.multiplier } : { lang }
+	);
 	if (!parsed) {
-		close();
+		close('selection-rejected');
 		return;
 	}
 	const range = selection.getRangeAt(0);
@@ -198,37 +269,44 @@ function inspect(): void {
 	if (rect.width === 0 && rect.height === 0) {
 		const first = range.getClientRects()[0];
 		if (!first) {
-			close();
+			record('warn', 'anchor.empty', { text });
+			close('anchor-empty');
 			return;
 		}
 		rect = first;
 	}
+	setState('selection.anchor', rect.toJSON());
 	const token = ++inspectToken;
-	void snapshot().then(s => {
-		if (token !== inspectToken) return;
-		if (parsed.currency === s.targetCurrency) {
-			showEcho(parsed, rect);
-			return;
-		}
-		open(parsed, rect);
-	});
+	void snapshot()
+		.then(s => {
+			if (token !== inspectToken) return;
+			if (parsed.currency === s.targetCurrency) {
+				showEcho(parsed, rect);
+				return;
+			}
+			open(parsed, rect);
+		})
+		.catch(() => undefined);
 }
 
 function applySettingsChange(before: Settings | null, next: Settings): void {
 	if (!current) return;
 	if (before && before.targetCurrency !== next.targetCurrency) {
-		close();
+		close('target-changed');
 		return;
 	}
+	setState('settings.target', next.targetCurrency);
+	setState('settings.overlayTheme', next.overlayTheme);
 	overlay.setTheme(themeFor(next));
 	place();
 }
 
 // Дебаунс — только у поля ввода в приложении; выделение обрабатывается сразу,
-// чтобы окно не отставало от жеста.
-document.addEventListener('selectionchange', inspect);
+// чтобы окно не отставало от жеста. Слушатель на window в фазе перехвата:
+// страница может остановить selectionchange на document своим слушателем.
+window.addEventListener('selectionchange', inspect, true);
 
-window.addEventListener('scroll', close, { capture: true, passive: true });
+window.addEventListener('scroll', () => close('scroll'), { capture: true, passive: true });
 window.addEventListener('resize', place, { passive: true });
 
 document.addEventListener(
@@ -236,7 +314,7 @@ document.addEventListener(
 	event => {
 		if (!current) return;
 		if (event.composedPath().includes(overlay.host)) return;
-		close();
+		close('pointerdown');
 	},
 	true
 );
@@ -251,14 +329,18 @@ document.addEventListener('visibilitychange', () => {
 	if (document.visibilityState !== 'visible') return;
 	const before = settings;
 	dirty = true;
-	void snapshot().then(s => applySettingsChange(before, s));
+	void snapshot()
+		.then(s => applySettingsChange(before, s))
+		.catch(() => undefined);
 });
 
 extensionApi().storage.onChanged.addListener((_changes, area) => {
 	if (area !== 'sync') return;
 	const before = settings;
 	dirty = true;
-	void snapshot().then(next => applySettingsChange(before, next));
+	void snapshot()
+		.then(next => applySettingsChange(before, next))
+		.catch(() => undefined);
 });
 
-void snapshot();
+void snapshot().catch(() => undefined);

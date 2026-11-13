@@ -32,6 +32,318 @@
 	"settings_howItWorks": {
 		"message": "Как это работает"
 	},
+	"settings_diagnostics": {
+		"message": "Диагностика"
+	},
+	"diagnostics_title": {
+		"message": "Диагностика"
+	},
+	"diagnostics_lead": {
+		"message": "Что контент-скрипт видел на этой странице. Отчёт остаётся в браузере."
+	},
+	"diagnostics_checking": {
+		"message": "Проверяю активную вкладку…"
+	},
+	"diagnostics_running": {
+		"message": "Контент-скрипт работает и уже видел выделение."
+	},
+	"diagnostics_stale": {
+		"message": "На странице старая копия контент-скрипта. Перезагрузите страницу."
+	},
+	"diagnostics_noSelection": {
+		"message": "Контент-скрипт работает, но выделения ещё не видел. Выделите сумму и нажмите «Обновить»."
+	},
+	"diagnostics_notRunning": {
+		"message": "Страница не ответила — контент-скрипт здесь не работает."
+	},
+	"diagnostics_reasons": {
+		"message": "Перезагрузите страницу после перезагрузки расширения. Страницы браузера, магазины расширений, PDF и file:// расширению недоступны."
+	},
+	"diagnostics_refresh": {
+		"message": "Обновить"
+	},
+	"diagnostics_copy": {
+		"message": "Скопировать отчёт"
+	},
+	"diagnostics_copied": {
+		"message": "Скопировано"
+	},
+	"diagnostics_copyFailed": {
+		"message": "Не удалось скопировать"
+	},
+	"diagnostics_state": {
+		"message": "Состояние"
+	},
+	"diagnostics_events": {
+		"message": "События"
+	},
+	"diagnostics_userAgent": {
+		"message": "Браузер"
+	},
+	"diagnostics_startedAt": {
+		"message": "Скрипт запущен"
+	},
+	"diagnostics_noTab": {
+		"message": "Нет активной вкладки."
+	},
+	"diagnostics_noSnapshot": {
+		"message": "Страница не вернула снимок."
+	},
+	"diagnostics_browserError": {
+		"message": "Сообщение браузера: {message}"
+	},
+	"diagnostics_yes": {
+		"message": "да"
+	},
+	"diagnostics_no": {
+		"message": "нет"
+	},
+	"diagnostics_key_version": {
+		"message": "Версия"
+	},
+	"diagnostics_key_topFrame": {
+		"message": "Главный фрейм"
+	},
+	"diagnostics_key_protocol": {
+		"message": "Протокол"
+	},
+	"diagnostics_key_settingsLang": {
+		"message": "Язык интерфейса"
+	},
+	"diagnostics_key_settingsTarget": {
+		"message": "Целевая валюта"
+	},
+	"diagnostics_key_settingsTheme": {
+		"message": "Тема расширения"
+	},
+	"diagnostics_key_settingsOverlayTheme": {
+		"message": "Тема окна"
+	},
+	"diagnostics_key_selectionResult": {
+		"message": "Результат выделения"
+	},
+	"diagnostics_key_selectionText": {
+		"message": "Текст выделения"
+	},
+	"diagnostics_key_selectionAnchor": {
+		"message": "Якорь выделения"
+	},
+	"diagnostics_key_overlayVisible": {
+		"message": "Окно видно"
+	},
+	"diagnostics_key_overlayPhase": {
+		"message": "Состояние окна"
+	},
+	"diagnostics_key_overlayPair": {
+		"message": "Пара окна"
+	},
+	"diagnostics_key_overlayAmount": {
+		"message": "Сумма в окне"
+	},
+	"diagnostics_key_url": {
+		"message": "Адрес"
+	},
+	"diagnostics_key_readyState": {
+		"message": "Состояние документа"
+	},
+	"diagnostics_key_visibility": {
+		"message": "Видимость"
+	},
+	"diagnostics_key_pageLang": {
+		"message": "Язык страницы"
+	},
+	"diagnostics_key_frames": {
+		"message": "Фреймов"
+	},
+	"diagnostics_key_contentType": {
+		"message": "Тип содержимого"
+	},
+	"diagnostics_event_boot": {
+		"message": "Запуск"
+	},
+	"diagnostics_event_selection": {
+		"message": "Выделение"
+	},
+	"diagnostics_event_rateRequest": {
+		"message": "Запрос курса"
+	},
+	"diagnostics_event_rateResult": {
+		"message": "Ответ курса"
+	},
+	"diagnostics_event_rateIgnored": {
+		"message": "Устаревший ответ курса"
+	},
+	"diagnostics_event_overlayClose": {
+		"message": "Окно закрыто"
+	},
+	"diagnostics_event_overlayNoSpace": {
+		"message": "Окну не хватает места"
+	},
+	"diagnostics_event_overlayConstruct": {
+		"message": "Окно не создалось"
+	},
+	"diagnostics_event_settingsLoad": {
+		"message": "Ошибка загрузки настроек"
+	},
+	"diagnostics_event_anchorEmpty": {
+		"message": "Нет координат выделения"
+	},
+	"diagnostics_event_windowError": {
+		"message": "Ошибка скрипта"
+	},
+	"diagnostics_event_unhandledrejection": {
+		"message": "Необработанный отказ"
+	},
+	"diagnostics_event_diagnosticsListen": {
+		"message": "Ошибка подписки диагностики"
+	},
+	"diagnostics_level_info": {
+		"message": "инфо"
+	},
+	"diagnostics_level_warn": {
+		"message": "вним."
+	},
+	"diagnostics_level_error": {
+		"message": "ошибка"
+	},
+	"diagnostics_value_parsed": {
+		"message": "разобрано"
+	},
+	"diagnostics_value_rejected": {
+		"message": "отклонено"
+	},
+	"diagnostics_value_none": {
+		"message": "нет"
+	},
+	"diagnostics_value_loading": {
+		"message": "загрузка"
+	},
+	"diagnostics_value_result": {
+		"message": "результат"
+	},
+	"diagnostics_value_error": {
+		"message": "ошибка"
+	},
+	"diagnostics_value_closed": {
+		"message": "закрыто"
+	},
+	"diagnostics_value_visible": {
+		"message": "видимо"
+	},
+	"diagnostics_value_hidden": {
+		"message": "скрыто"
+	},
+	"diagnostics_value_interactive": {
+		"message": "DOM готов"
+	},
+	"diagnostics_value_complete": {
+		"message": "загружено"
+	},
+	"diagnostics_error_network": {
+		"message": "сеть"
+	},
+	"diagnostics_error_timeout": {
+		"message": "таймаут"
+	},
+	"diagnostics_error_tooMany": {
+		"message": "слишком много запросов"
+	},
+	"diagnostics_error_server": {
+		"message": "ошибка сервера"
+	},
+	"diagnostics_error_noRate": {
+		"message": "нет курса"
+	},
+	"diagnostics_error_unparseable": {
+		"message": "ответ не разобран"
+	},
+	"diagnostics_error_rateLimit": {
+		"message": "потолок частоты"
+	},
+	"diagnostics_close_openSettings": {
+		"message": "открыты настройки"
+	},
+	"diagnostics_close_selectionEmpty": {
+		"message": "выделение снято"
+	},
+	"diagnostics_close_selectionRejected": {
+		"message": "выделение не разобрано"
+	},
+	"diagnostics_close_anchorEmpty": {
+		"message": "нет координат выделения"
+	},
+	"diagnostics_close_targetChanged": {
+		"message": "сменилась целевая валюта"
+	},
+	"diagnostics_close_scroll": {
+		"message": "прокрутка"
+	},
+	"diagnostics_close_pointerdown": {
+		"message": "клик вне окна"
+	},
+	"diagnostics_field_result": {
+		"message": "результат"
+	},
+	"diagnostics_field_text": {
+		"message": "текст"
+	},
+	"diagnostics_field_lang": {
+		"message": "язык"
+	},
+	"diagnostics_field_currency": {
+		"message": "валюта"
+	},
+	"diagnostics_field_amount": {
+		"message": "сумма"
+	},
+	"diagnostics_field_multiplier": {
+		"message": "множитель"
+	},
+	"diagnostics_field_from": {
+		"message": "из"
+	},
+	"diagnostics_field_to": {
+		"message": "в"
+	},
+	"diagnostics_field_fresh": {
+		"message": "принудительно"
+	},
+	"diagnostics_field_error": {
+		"message": "ошибка"
+	},
+	"diagnostics_field_status": {
+		"message": "статус"
+	},
+	"diagnostics_field_reason": {
+		"message": "причина"
+	},
+	"diagnostics_field_message": {
+		"message": "сообщение"
+	},
+	"diagnostics_field_source": {
+		"message": "источник"
+	},
+	"diagnostics_field_line": {
+		"message": "строка"
+	},
+	"diagnostics_field_column": {
+		"message": "колонка"
+	},
+	"diagnostics_field_collapsed": {
+		"message": "свёрнуто"
+	},
+	"diagnostics_field_ranges": {
+		"message": "диапазоны"
+	},
+	"diagnostics_field_anchor": {
+		"message": "якорь"
+	},
+	"diagnostics_field_viewport": {
+		"message": "экран"
+	},
+	"diagnostics_field_gap": {
+		"message": "отступ"
+	},
 	"values_light": {
 		"message": "Светлая"
 	},
@@ -199,5 +511,23 @@
 	},
 	"onboarding_title": {
 		"message": "Добро пожаловать"
+	},
+	"popup_missingElement": {
+		"message": "Нет элемента {selector}"
+	},
+	"popup_amountPlaceholder": {
+		"message": "0"
+	},
+	"picker_closeGlyph": {
+		"message": "×"
+	},
+	"onboarding_sceneBefore": {
+		"message": "The book costs"
+	},
+	"onboarding_sceneAfter": {
+		"message": "today."
+	},
+	"onboarding_sceneAmount": {
+		"message": "14,50 €"
 	}
 }

@@ -32,6 +32,318 @@
 	"settings_howItWorks": {
 		"message": "How it works"
 	},
+	"settings_diagnostics": {
+		"message": "Diagnostics"
+	},
+	"diagnostics_title": {
+		"message": "Diagnostics"
+	},
+	"diagnostics_lead": {
+		"message": "What the content script saw on this page. The report stays in the browser."
+	},
+	"diagnostics_checking": {
+		"message": "Checking the active tab…"
+	},
+	"diagnostics_running": {
+		"message": "The content script is running and has seen a selection."
+	},
+	"diagnostics_stale": {
+		"message": "The page is running an older content script. Reload the page."
+	},
+	"diagnostics_noSelection": {
+		"message": "The content script is running but has not seen a selection. Select an amount, then refresh."
+	},
+	"diagnostics_notRunning": {
+		"message": "The page did not answer — the content script is not running here."
+	},
+	"diagnostics_reasons": {
+		"message": "Reload the page after reloading the extension. Browser pages, extension stores, PDF and file:// are closed to extensions."
+	},
+	"diagnostics_refresh": {
+		"message": "Refresh"
+	},
+	"diagnostics_copy": {
+		"message": "Copy report"
+	},
+	"diagnostics_copied": {
+		"message": "Copied"
+	},
+	"diagnostics_copyFailed": {
+		"message": "Could not copy"
+	},
+	"diagnostics_state": {
+		"message": "State"
+	},
+	"diagnostics_events": {
+		"message": "Events"
+	},
+	"diagnostics_userAgent": {
+		"message": "Browser"
+	},
+	"diagnostics_startedAt": {
+		"message": "Content script started"
+	},
+	"diagnostics_noTab": {
+		"message": "No active tab."
+	},
+	"diagnostics_noSnapshot": {
+		"message": "The page returned no snapshot."
+	},
+	"diagnostics_browserError": {
+		"message": "Browser message: {message}"
+	},
+	"diagnostics_yes": {
+		"message": "yes"
+	},
+	"diagnostics_no": {
+		"message": "no"
+	},
+	"diagnostics_key_version": {
+		"message": "Version"
+	},
+	"diagnostics_key_topFrame": {
+		"message": "Top frame"
+	},
+	"diagnostics_key_protocol": {
+		"message": "Protocol"
+	},
+	"diagnostics_key_settingsLang": {
+		"message": "Interface language"
+	},
+	"diagnostics_key_settingsTarget": {
+		"message": "Target currency"
+	},
+	"diagnostics_key_settingsTheme": {
+		"message": "Extension theme"
+	},
+	"diagnostics_key_settingsOverlayTheme": {
+		"message": "Overlay theme"
+	},
+	"diagnostics_key_selectionResult": {
+		"message": "Selection result"
+	},
+	"diagnostics_key_selectionText": {
+		"message": "Selection text"
+	},
+	"diagnostics_key_selectionAnchor": {
+		"message": "Selection anchor"
+	},
+	"diagnostics_key_overlayVisible": {
+		"message": "Overlay visible"
+	},
+	"diagnostics_key_overlayPhase": {
+		"message": "Overlay phase"
+	},
+	"diagnostics_key_overlayPair": {
+		"message": "Overlay pair"
+	},
+	"diagnostics_key_overlayAmount": {
+		"message": "Overlay amount"
+	},
+	"diagnostics_key_url": {
+		"message": "Address"
+	},
+	"diagnostics_key_readyState": {
+		"message": "Document state"
+	},
+	"diagnostics_key_visibility": {
+		"message": "Visibility"
+	},
+	"diagnostics_key_pageLang": {
+		"message": "Page language"
+	},
+	"diagnostics_key_frames": {
+		"message": "Frames"
+	},
+	"diagnostics_key_contentType": {
+		"message": "Content type"
+	},
+	"diagnostics_event_boot": {
+		"message": "Start"
+	},
+	"diagnostics_event_selection": {
+		"message": "Selection"
+	},
+	"diagnostics_event_rateRequest": {
+		"message": "Rate request"
+	},
+	"diagnostics_event_rateResult": {
+		"message": "Rate result"
+	},
+	"diagnostics_event_rateIgnored": {
+		"message": "Stale rate result"
+	},
+	"diagnostics_event_overlayClose": {
+		"message": "Overlay closed"
+	},
+	"diagnostics_event_overlayNoSpace": {
+		"message": "No room for the overlay"
+	},
+	"diagnostics_event_overlayConstruct": {
+		"message": "Overlay failed"
+	},
+	"diagnostics_event_settingsLoad": {
+		"message": "Settings load failed"
+	},
+	"diagnostics_event_anchorEmpty": {
+		"message": "No anchor rect"
+	},
+	"diagnostics_event_windowError": {
+		"message": "Script error"
+	},
+	"diagnostics_event_unhandledrejection": {
+		"message": "Unhandled rejection"
+	},
+	"diagnostics_event_diagnosticsListen": {
+		"message": "Diagnostics listener failed"
+	},
+	"diagnostics_level_info": {
+		"message": "info"
+	},
+	"diagnostics_level_warn": {
+		"message": "warn"
+	},
+	"diagnostics_level_error": {
+		"message": "error"
+	},
+	"diagnostics_value_parsed": {
+		"message": "parsed"
+	},
+	"diagnostics_value_rejected": {
+		"message": "rejected"
+	},
+	"diagnostics_value_none": {
+		"message": "none"
+	},
+	"diagnostics_value_loading": {
+		"message": "loading"
+	},
+	"diagnostics_value_result": {
+		"message": "result"
+	},
+	"diagnostics_value_error": {
+		"message": "error"
+	},
+	"diagnostics_value_closed": {
+		"message": "closed"
+	},
+	"diagnostics_value_visible": {
+		"message": "visible"
+	},
+	"diagnostics_value_hidden": {
+		"message": "hidden"
+	},
+	"diagnostics_value_interactive": {
+		"message": "DOM ready"
+	},
+	"diagnostics_value_complete": {
+		"message": "complete"
+	},
+	"diagnostics_error_network": {
+		"message": "network"
+	},
+	"diagnostics_error_timeout": {
+		"message": "timeout"
+	},
+	"diagnostics_error_tooMany": {
+		"message": "too many requests"
+	},
+	"diagnostics_error_server": {
+		"message": "server error"
+	},
+	"diagnostics_error_noRate": {
+		"message": "no rate"
+	},
+	"diagnostics_error_unparseable": {
+		"message": "unparseable answer"
+	},
+	"diagnostics_error_rateLimit": {
+		"message": "rate limit"
+	},
+	"diagnostics_close_openSettings": {
+		"message": "settings opened"
+	},
+	"diagnostics_close_selectionEmpty": {
+		"message": "selection cleared"
+	},
+	"diagnostics_close_selectionRejected": {
+		"message": "selection rejected"
+	},
+	"diagnostics_close_anchorEmpty": {
+		"message": "no anchor rect"
+	},
+	"diagnostics_close_targetChanged": {
+		"message": "target changed"
+	},
+	"diagnostics_close_scroll": {
+		"message": "scroll"
+	},
+	"diagnostics_close_pointerdown": {
+		"message": "click outside"
+	},
+	"diagnostics_field_result": {
+		"message": "result"
+	},
+	"diagnostics_field_text": {
+		"message": "text"
+	},
+	"diagnostics_field_lang": {
+		"message": "language"
+	},
+	"diagnostics_field_currency": {
+		"message": "currency"
+	},
+	"diagnostics_field_amount": {
+		"message": "amount"
+	},
+	"diagnostics_field_multiplier": {
+		"message": "multiplier"
+	},
+	"diagnostics_field_from": {
+		"message": "from"
+	},
+	"diagnostics_field_to": {
+		"message": "to"
+	},
+	"diagnostics_field_fresh": {
+		"message": "fresh"
+	},
+	"diagnostics_field_error": {
+		"message": "error"
+	},
+	"diagnostics_field_status": {
+		"message": "status"
+	},
+	"diagnostics_field_reason": {
+		"message": "reason"
+	},
+	"diagnostics_field_message": {
+		"message": "message"
+	},
+	"diagnostics_field_source": {
+		"message": "source"
+	},
+	"diagnostics_field_line": {
+		"message": "line"
+	},
+	"diagnostics_field_column": {
+		"message": "column"
+	},
+	"diagnostics_field_collapsed": {
+		"message": "collapsed"
+	},
+	"diagnostics_field_ranges": {
+		"message": "ranges"
+	},
+	"diagnostics_field_anchor": {
+		"message": "anchor"
+	},
+	"diagnostics_field_viewport": {
+		"message": "viewport"
+	},
+	"diagnostics_field_gap": {
+		"message": "gap"
+	},
 	"values_light": {
 		"message": "Light"
 	},
@@ -199,5 +511,23 @@
 	},
 	"onboarding_title": {
 		"message": "Welcome"
+	},
+	"popup_missingElement": {
+		"message": "Missing element {selector}"
+	},
+	"popup_amountPlaceholder": {
+		"message": "0"
+	},
+	"picker_closeGlyph": {
+		"message": "×"
+	},
+	"onboarding_sceneBefore": {
+		"message": "The book costs"
+	},
+	"onboarding_sceneAfter": {
+		"message": "today."
+	},
+	"onboarding_sceneAmount": {
+		"message": "14,50 €"
 	}
 }

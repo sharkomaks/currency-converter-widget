@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Currency Converter Widget</title>
+		<title></title>
 		<link rel="stylesheet" href="./popup.css" />
 		<style>
 			@font-face {
@@ -39,6 +39,18 @@
 					</svg>
 				</button>
 				<h1 id="title"></h1>
+				<button type="button" id="diagnostics-open" class="icon-btn" hidden>
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<path d="M3 12h3.5l2-5 3.5 10 2.2-5H21" />
+					</svg>
+				</button>
+				<button type="button" id="how" class="icon-btn" hidden>
+					<svg viewBox="0 0 24 24" aria-hidden="true">
+						<circle cx="12" cy="12" r="9" />
+						<path d="M9.3 9.1a2.8 2.8 0 1 1 4.5 2.3c-.9.7-1.8 1.2-1.8 2.6" />
+						<path d="M12 17.2h.01" />
+					</svg>
+				</button>
 				<button type="button" id="gear" class="icon-btn">
 					<svg viewBox="0 0 24 24" aria-hidden="true">
 						<circle cx="12" cy="12" r="3.2" />
@@ -64,7 +76,6 @@
 								inputmode="decimal"
 								autocomplete="off"
 								spellcheck="false"
-								placeholder="0"
 							/>
 						</div>
 						<p id="note" class="note" role="status" aria-live="polite"></p>
@@ -136,10 +147,6 @@
 					</div>
 					<input class="slider" data-gap type="range" min="0" max="20" step="1" aria-label="" />
 				</div>
-				<button type="button" id="how" class="nav-row">
-					<span data-i18n="settings.howItWorks"></span>
-					<span class="chev" aria-hidden="true">›</span>
-				</button>
 			</section>
 
 			<section id="view-onboarding" class="view" hidden>
@@ -188,7 +195,11 @@
 					<h2 data-i18n="onboarding.step2Title"></h2>
 					<p class="lead" data-i18n="onboarding.step2Lead"></p>
 					<div class="scene">
-						<p class="sentence">The book costs <mark id="scene-amount">14,50 €</mark> today.</p>
+						<p class="sentence">
+							<span data-i18n="onboarding.sceneBefore"></span>
+							<mark id="scene-amount" data-i18n="onboarding.sceneAmount"></mark>
+							<span data-i18n="onboarding.sceneAfter"></span>
+						</p>
 					</div>
 					<div class="row row-top">
 						<span class="row-label" data-i18n="settings.gap"></span>
@@ -205,6 +216,21 @@
 						></button>
 						<button type="button" id="onboarding-done" class="primary" data-i18n="onboarding.done"></button>
 					</div>
+				</div>
+			</section>
+
+			<section id="view-diagnostics" class="view" hidden>
+				<p id="diagnostics-status" class="hint" role="status" aria-live="polite"></p>
+				<p class="hint" data-i18n="diagnostics.lead"></p>
+				<pre id="diagnostics-body" class="diag-body"></pre>
+				<div class="actions">
+					<button
+						type="button"
+						id="diagnostics-refresh"
+						class="secondary"
+						data-i18n="diagnostics.refresh"
+					></button>
+					<button type="button" id="diagnostics-copy" class="primary" data-i18n="diagnostics.copy"></button>
 				</div>
 			</section>
 		</main>
