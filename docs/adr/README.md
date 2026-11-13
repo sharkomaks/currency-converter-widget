@@ -34,3 +34,4 @@ The full reasoning stays in the Russian design corpus:
 | [0020](0020-ui-design-under-frontend-design-skill.md) | UI is designed under the frontend-design skill; the plan wins | accepted |
 | [0021](0021-chrome-namespace-in-chromium.md) | Chromium uses `chrome`; Firefox uses `browser` | accepted (2026-11-13) |
 | [0022](0022-space-grouping-keeps-decimal-separator.md) | Space grouping settles thousands; the remaining separator is decimal | accepted (2026-11-13) |
+| [0023](0023-picker-fixed-height.md) | The currency picker keeps a fixed height while filtering | accepted (2026-11-13) |
